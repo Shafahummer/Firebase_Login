@@ -1,8 +1,8 @@
 package com.example.firebase_login;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -63,12 +63,44 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this,"Login Success",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,"SignUp Success",Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+    public void onLogin(View view){
+
+        String myEmail=email.getText().toString();
+        String myPassword=password.getText().toString();
+
+        mAuth.signInWithEmailAndPassword(myEmail, myPassword)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.i("TAG", "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String userID=user.getUid();
+                          Toast.makeText(MainActivity.this,"Login Success",Toast.LENGTH_SHORT).show();
+                          Log.i("USER","USER: "+user.toString());
+                          Log.i("USER","USER: "+userID);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.i("TAG", "signInWithEmail:failure", task.getException());
+                         Toast.makeText(MainActivity.this,"Login failed",Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        // ...
+                    }
+                });
+    }
+    public void logOut(View view){
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(MainActivity.this,"Signed out successfully",Toast.LENGTH_SHORT).show();
     }
 }
